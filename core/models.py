@@ -3,12 +3,15 @@ from django.db import models
 class ProfileInfo(models.Model):
 
     full_name = models.CharField(max_length=50)
-    headline = models.CharField(max_length=100)
-    bio_md = models.TextField()
-    aspirations_md = models.TextField()
-    skills_list = models.TextField()
-
-
+    headline = models.CharField(max_length=100,blank=True, null=True)
+    bio_md = models.TextField(blank=True, null=True)
+    aspirations_md = models.TextField(blank=True, null=True)
+    skills_list = models.TextField(blank=True, null=True)
+    experience_md = models.TextField(blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    github_url = models.URLField(blank=True, null=True)
+    linkedin_url = models.URLField(blank=True, null=True)
+    
     def __str__(self):
         return self.full_name
 
@@ -34,7 +37,6 @@ class Project(models.Model):
 class ProjectImage(models.Model):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='images')
-    full_name = models.CharField(max_length = 100)
     image = models.ImageField(upload_to='projects/gallery/')
     caption = models.CharField(max_length=200, blank=True, null=True)
     order = models.PositiveIntegerField(default=0)
