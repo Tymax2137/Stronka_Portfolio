@@ -1,0 +1,109 @@
+{% extends 'core/base.html' %}
+{% load markdown_extras %}
+
+{% block title %}{{ profile.full_name|default:"Portfolio" }} | Cybersecurity{% endblock %}
+
+{% block content %}
+{% if profile %}
+    <!-- Sekcja Hero -->
+    <section class="py-4 mb-5 border-bottom border-secondary-subtle">
+        <p class="font-mono text-primary mb-2">$ whoami</p>
+        <h1 class="display-4 fw-bold text-light mb-2">{{ profile.full_name }}</h1>
+        {% if profile.headline %}
+            <h2 class="h4 text-secondary font-mono mb-4">{{ profile.headline }}</h2>
+        {% endif %}
+        
+        <div class="d-flex flex-wrap gap-2 mt-4">
+            <a href="{% url 'project_list' %}" class="btn btn-primary font-mono">
+                <i class="bi bi-folder2-open me-1"></i> Zobacz Projekty
+            </a>
+            {% if profile.github_url %}
+                <a href="{{ profile.github_url }}" target="_blank" class="btn btn-outline-light font-mono">
+                    <i class="bi bi-github me-1"></i> GitHub
+                </a>
+            {% endif %}
+            {% if profile.linkedin_url %}
+                <a href="{{ profile.linkedin_url }}" target="_blank" class="btn btn-outline-light font-mono">
+                    <i class="bi bi-linkedin me-1"></i> LinkedIn
+                </a>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Bio i Aspiracje -->
+    <div class="row g-4 mb-5">
+        {% if profile.bio_md %}
+        <div class="col-lg-6">
+            <div class="card card-tech h-100 p-4">
+                <h3 class="h5 font-mono text-light border-bottom border-secondary-subtle pb-2 mb-3">
+                    <i class="bi bi-person-badge text-primary me-2"></i>O mnie
+                </h3>
+                <div class="markdown-body">
+                    {{ profile.bio_md|markdown }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if profile.aspirations_md %}
+        <div class="col-lg-6">
+            <div class="card card-tech h-100 p-4">
+                <h3 class="h5 font-mono text-light border-bottom border-secondary-subtle pb-2 mb-3">
+                    <i class="bi bi-shield-lock text-primary me-2"></i>Aspiracje & Homelab
+                </h3>
+                <div class="markdown-body">
+                    {{ profile.aspirations_md|markdown }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Umiejętności i Doświadczenie / CV -->
+    <div class="row g-4 mb-5">
+        {% if profile.skills_list %}
+        <div class="col-lg-5">
+            <div class="card card-tech h-100 p-4">
+                <h3 class="h5 font-mono text-light border-bottom border-secondary-subtle pb-2 mb-3">
+                    <i class="bi bi-terminal text-primary me-2"></i>Stack & Narzędzia
+                </h3>
+                <div class="markdown-body">
+                    {{ profile.skills_list|markdown }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if profile.experience_md %}
+        <div class="col-lg-7">
+            <div class="card card-tech h-100 p-4">
+                <h3 class="h5 font-mono text-light border-bottom border-secondary-subtle pb-2 mb-3">
+                    <i class="bi bi-file-earmark-text text-primary me-2"></i>Doświadczenie & Edukacja
+                </h3>
+                <div class="markdown-body">
+                    {{ profile.experience_md|markdown }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Kontakt -->
+    <section id="kontakt" class="card card-tech p-4 text-center">
+        <h3 class="h5 font-mono text-light mb-3">Szybki kontakt</h3>
+        <p class="text-secondary mb-3">Masz pytania odnośnie projektów lub szukasz kogoś do zespołu security?</p>
+        <div>
+            {% if profile.email %}
+                <a href="mailto:{{ profile.email }}" class="btn btn-outline-primary font-mono">
+                    <i class="bi bi-envelope me-2"></i>{{ profile.email }}
+                </a>
+            {% endif %}
+        </div>
+    </section>
+
+{% else %}
+    <div class="alert alert-warning font-mono">
+        Brak danych profilu w bazie. Zaloguj się do <a href="/admin/">panelu admina</a> i utwórz wpis w <strong>ProfileInfo</strong>.
+    </div>
+{% endif %}
+{% endblock %}

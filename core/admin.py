@@ -11,5 +11,5 @@ class ProjectImageInline(admin.TabularInline):
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ("title", "order", "is_published", "created_at")
     list_editable = ("order", "is_published")
-    prepopulated_fields = {"slug": ("title")}
+    prepopulated_fields = {"slug": ("title",)}
     inlines = [ProjectImageInline]

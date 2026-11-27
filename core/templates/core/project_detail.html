@@ -1,0 +1,96 @@
+{% extends 'core/base.html' %}
+{% load markdown_extras %}
+
+{% block title %}{{ project.title }} | Case Study{% endblock %}
+
+{% block content %}
+<!-- Górna belka nawigacji i linków -->
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 pb-3 border-bottom border-secondary-subtle">
+    <a href="{% url 'project_list' %}" class="btn btn-sm btn-outline-secondary font-mono">
+        <i class="bi bi-arrow-left me-1"></i> Powrót do projektów
+    </a>
+    <div class="d-flex gap-2">
+        {% if project.github_url %}
+            <a href="{{ project.github_url }}" target="_blank" class="btn btn-sm btn-outline-light font-mono">
+                <i class="bi bi-github me-1"></i> Kod na GitHubie
+            </a>
+        {% endif %}
+        {% if project.live_demo_url %}
+            <a href="{{ project.live_demo_url }}" target="_blank" class="btn btn-sm btn-success font-mono">
+                <i class="bi bi-box-arrow-up-right me-1"></i> Uruchom Live Demo
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Nagłówek Case Study -->
+<header class="mb-4">
+    <h1 class="display-5 fw-bold text-light mb-2">{{ project.title }}</h1>
+    {% if project.tech_stack %}
+        <p class="font-mono text-info mb-3">Stack: {{ project.tech_stack }}</p>
+    {% endif %}
+    <p class="lead text-secondary">{{ project.short_summary }}</p>
+</header>
+
+<!-- Główne zdjęcie / diagram okładkowy -->
+{% if project.cover_image %}
+<div class="mb-5">
+    <img src="{{ project.cover_image.url }}" class="img-fluid rounded border border-secondary-subtle w-100" style="max-height: 480px; object-fit: contain; background-color: #010409;" alt="{{ project.title }}">
+</div>
+{% endif %}
+
+<!-- Blok 1: Opis problemu -->
+<section class="card card-tech p-4 mb-4">
+    <h2 class="h4 font-mono text-light border-bottom border-secondary-subtle pb-2 mb-3">
+        <span class="text-primary">01.</span> Opis problemu i cel projektu
+    </h2>
+    <div class="markdown-body">
+        {{ project.problem_description|markdown }}
+    </div>
+</section>
+
+<!-- Blok 2: Tok myślenia i architektura -->
+<section class="card card-tech p-4 mb-4">
+    <h2 class="h4 font-mono text-light border-bottom border-secondary-subtle pb-2 mb-3">
+        <span class="text-primary">02.</span> Tok myślenia i architektura rozwiązania
+    </h2>
+    <div class="markdown-body">
+        {{ project.thought_process|markdown }}
+    </div>
+</section>
+
+<!-- Blok 3: WARUNKOWY - Napotkane trudności (wyświetla się tylko jeśli pole nie jest puste!) -->
+{% if project.challenges %}
+<section class="card card-tech p-4 mb-4 border-warning-subtle">
+    <h2 class="h4 font-mono text-warning border-bottom border-secondary-subtle pb-2 mb-3">
+        <span class="text-warning">03.</span> Napotkane trudności i wnioski
+    </h2>
+    <div class="markdown-body">
+        {{ project.challenges|markdown }}
+    </div>
+</section>
+{% endif %}
+
+<!-- Blok 4: WARUNKOWY - Galeria dodatkowych zrzutów i diagramów -->
+{% if project.images.all %}
+<section class="mt-5">
+    <h2 class="h4 font-mono text-light mb-4">
+        <span class="text-primary">04.</span> Zrzuty ekranu i diagramy
+    </h2>
+    <div class="row g-4">
+        {% for item in project.images.all %}
+        <div class="col-md-6">
+            <figure class="card card-tech p-2 h-100">
+                <img src="{{ item.image.url }}" class="img-fluid rounded" alt="{{ item.caption|default:project.title }}">
+                {% if item.caption %}
+                    <figcaption class="figure-caption text-center font-mono mt-2 px-2">
+                        {{ item.caption }}
+                    </figcaption>
+                {% endif %}
+            </figure>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}
